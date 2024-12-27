@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="635.39111"
+   height="392.724"
+   viewBox="0 0 168.1139 103.90822"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.2.2 (732a01da63, 2022-12-09)"
+   sodipodi:docname="Drew or False Logo.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="px"
+     showgrid="false"
+     inkscape:zoom="1.052"
+     inkscape:cx="126.42586"
+     inkscape:cy="236.69202"
+     inkscape:window-width="1366"
+     inkscape:window-height="705"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2">
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient4797">
+      <stop
+         style="stop-color:#e4bf2c;stop-opacity:1;"
+         offset="0"
+         id="stop4793" />
+      <stop
+         style="stop-color:#e5cfa4;stop-opacity:1;"
+         offset="0.10641893"
+         id="stop4929" />
+      <stop
+         style="stop-color:#e4bf2c;stop-opacity:1;"
+         offset="0.5"
+         id="stop4925" />
+      <stop
+         style="stop-color:#e4bf2c;stop-opacity:1;"
+         offset="0.75"
+         id="stop4927" />
+      <stop
+         style="stop-color:#c5a626;stop-opacity:1;"
+         offset="1"
+         id="stop4795" />
+    </linearGradient>
+    <rect
+       x="-341.07706"
+       y="544.70514"
+       width="1175.5034"
+       height="1155.5894"
+       id="rect2583" />
+    <rect
+       x="-341.07706"
+       y="544.70514"
+       width="1175.5034"
+       height="1155.5894"
+       id="rect2667" />
+    <rect
+       x="-341.07706"
+       y="544.70514"
+       width="1801.6598"
+       height="1188.679"
+       id="rect2679" />
+    <rect
+       x="-341.07706"
+       y="544.70514"
+       width="1801.6598"
+       height="1188.679"
+       id="rect2691" />
+    <rect
+       x="-341.07706"
+       y="544.70514"
+       width="1801.6598"
+       height="1188.679"
+       id="rect2703" />
+    <rect
+       x="-341.07706"
+       y="544.70514"
+       width="1175.5034"
+       height="1155.5894"
+       id="rect2721" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient4797"
+       id="linearGradient4799"
+       x1="143.07471"
+       y1="125.07922"
+       x2="157.79784"
+       y2="129.02223"
+       gradientUnits="userSpaceOnUse"
+       spreadMethod="reflect"
+       gradientTransform="matrix(0.48965447,0,0,0.48965447,10.970425,3.1051731)" />
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(64.608448,1.5056447)">
+    <rect
+       style="display:inline;fill:#1e00ff;fill-opacity:1;stroke:#000000;stroke-width:1.46897;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:normal"
+       id="rect9576"
+       width="65.804092"
+       height="69.991638"
+       x="-75.899681"
+       y="3.4959638"
+       transform="rotate(-30.152206)"
+       inkscape:label="Blue Rectangle"
+       inkscape:export-filename="..\src\com\fishtankapps\bookitbaby\images\drew-or-false-blue-square.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <path
+       sodipodi:type="star"
+       style="display:inline;fill:#fff200;fill-opacity:1;stroke:#000000;stroke-width:16.5383;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:normal"
+       id="path9522"
+       inkscape:flatsided="true"
+       sodipodi:sides="3"
+       sodipodi:cx="-1201.9626"
+       sodipodi:cy="-59.503098"
+       sodipodi:r1="573.56653"
+       sodipodi:r2="286.78326"
+       sodipodi:arg1="0.85391818"
+       sodipodi:arg2="1.9011157"
+       inkscape:rounded="0.1"
+       inkscape:randomized="0"
+       d="m -825.10969,372.88609 c -74.892,65.27285 -920.65751,-224.72474 -939.73941,-322.219544 -19.082,-97.494802 654.946,-684.950426 748.92,-652.728476 93.97394,32.22196 265.71142,909.67517 190.81941,974.94802 z"
+       transform="matrix(0.0886253,0.00590481,-0.00590481,0.0886253,167.28301,58.786714)"
+       inkscape:transform-center-x="1.6971193"
+       inkscape:transform-center-y="1.4549474"
+       inkscape:label="Yellow Triangle"
+       inkscape:export-filename="..\src\com\fishtankapps\bookitbaby\images\drew-or-false-yellow-triangle.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <ellipse
+       style="display:inline;fill:#f5000e;fill-opacity:1;stroke:#000000;stroke-width:1.46897;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1;paint-order:normal"
+       id="path9468"
+       cx="26.032579"
+       cy="57.328415"
+       rx="53.898869"
+       ry="26.949434"
+       transform="rotate(7.0506451)"
+       inkscape:label="Red Oval"
+       inkscape:export-filename="..\src\com\fishtankapps\bookitbaby\images\drew-or-false-red-oval.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96" />
+    <g
+       id="g16847"
+       inkscape:label="Pencil"
+       style="display:inline"
+       inkscape:export-filename="..\src\com\fishtankapps\bookitbaby\images\drew-or-false-pencil.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96">
+      <path
+         style="fill:#efda86;fill-opacity:1;stroke:#000000;stroke-width:0.734482;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:normal"
+         d="m 86.964528,70.736783 c -0.432822,1.536856 -5.777744,7.148726 -5.777744,7.148726 0,0 -1.819259,-7.632477 -1.397688,-9.197837 l 1.2385,-4.336905 7.209238,1.930716 z"
+         id="path1797"
+         sodipodi:nodetypes="cccccc"
+         inkscape:label="Pencil Tip" />
+      <path
+         id="rect788"
+         style="fill:url(#linearGradient4799);fill-opacity:1;stroke:#000000;stroke-width:0.734482;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:normal"
+         d="m 95.854959,12.42915 c 1.24154,-3.4987698 8.220361,-1.585159 7.175441,2.049106 L 86.964528,70.736783 c -0.0634,-1.99447 -6.206424,-3.663771 -7.175432,-2.049111 z"
+         sodipodi:nodetypes="ccccc"
+         inkscape:label="Pencil Body" />
+      <path
+         style="display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.489652;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:stroke markers fill"
+         id="path3314"
+         d="m 79.027384,78.092621 c -1.702961,0.185318 -3.416312,0.149244 -5.125362,0.103334 C 69.941273,78.007648 65.995821,77.589274 62.056295,77.151533 56.683141,76.532979 51.332042,75.741457 45.988773,74.907276 37.509893,73.495593 38.495659,73.588744 29.475534,72.018165 24.023222,71.04679 18.536996,70.309341 13.023133,69.80212 7.7832136,69.318653 2.5273956,69.403381 -2.7084993,69.850535 c -3.2044001,0.357209 -6.4055587,0.881091 -9.5201487,1.729667 -1.819304,0.495663 -2.497656,0.776974 -4.257128,1.407847 -2.840877,1.198522 -5.856802,2.564686 -7.829686,5.044368 -0.321399,0.403964 -0.567534,0.86247 -0.8513,1.293701 -1.034254,2.009733 -1.375775,4.308393 -0.391181,6.417148 0.178665,0.382659 0.432598,0.725427 0.648897,1.088131 0.295406,0.322503 0.557954,0.678521 0.886217,0.967509 1.118233,0.984455 2.642924,1.693247 4.098271,1.983335 6.777669,1.350993 5.340712,1.191029 9.477448,1.43765 4.976861,0.01368 9.93496493,-0.546791 14.8864956,-0.98975 6.1077254,-0.567433 12.2377944,-0.807653 18.3694054,-0.874244 5.117706,-0.06463 10.227976,0.211931 15.281238,1.027061 -1.269323,-0.200295 -2.524339,-0.540966 -3.807969,-0.600871 -0.538155,-0.02513 1.035606,0.3019 1.538565,0.494964 1.093992,0.419942 2.264904,1.014173 3.048128,1.917074 0.181511,0.209241 0.301826,0.464561 0.45274,0.696842 0.05315,0.227401 0.153354,0.448761 0.159439,0.682202 0.04109,1.57658 -1.880516,2.423204 -3.015361,3.012342 -2.858842,1.26329 -5.952176,1.825 -9.015767,2.33716 -3.859367,0.62136 -7.762785,0.84274 -11.664316,0.97642 -4.484095,0.163259 -8.9699674,-0.003 -13.4511224,-0.16835 -5.2163219,-0.16024 -10.4176355,-0.55246 -15.6071876,-1.09101 -2.701545,-0.33675 -5.415676,-0.64018 -8.088701,-1.17013 -0.02964,-0.006 0.09453,-0.0549 0.06538,-0.0628 -3.396139,-0.82211 -1.715769,-0.3805 -5.04166,-1.322736 -2.957893,-0.912546 -5.881565,-1.971708 -8.652681,-3.360542 -1.636235,-0.820041 -1.893064,-1.02225 -3.421798,-1.962447 -1.953637,-1.40087 -4.123572,-2.883485 -5.210455,-5.117234 -0.154968,-0.318484 -0.248696,-0.663274 -0.37304,-0.994907 -0.337551,-1.68769 0.165974,-3.327895 1.329697,-4.5937 0.273328,-0.297296 0.588918,-0.55277 0.883378,-0.829156 1.066047,-0.941595 5.908427,-2.927112 5.908427,-2.927112 l -1.208355,-0.930921 c 0,0 -2.645262,0.775099 -3.3741,0.971313 -1.555302,0.418728 -2.998868,1.200075 -4.273881,2.168253 -0.311464,0.289242 -0.646798,0.554761 -0.934393,0.86775 -1.239551,1.34898 -1.748023,3.113667 -1.379752,4.903707 0.135537,0.351161 0.238858,0.716524 0.406611,1.05349 1.147224,2.304467 3.390734,3.832586 5.425761,5.273978 1.513801,0.930575 1.856961,1.184751 3.471762,1.996254 2.789474,1.40183 5.735684,2.47049 8.70924,3.406006 1.763405,0.511854 3.192217,0.961684 4.99368,1.341804 4.505311,0.95065 9.048021,1.72186 13.622248,2.25153 5.507568,0.612599 11.02845413,1.098029 16.5632106,1.387339 4.7820774,0.26709 9.5698174,0.48506 14.3609004,0.42915 4.124524,-0.0987 8.25576,-0.25511 12.345944,-0.83394 3.221184,-0.49128 6.486578,-1.024379 9.465772,-2.409119 1.455451,-0.7951 3.324936,-1.825071 3.308506,-3.7578 -0.0025,-0.30379 -0.113019,-0.59699 -0.16953,-0.895493 -0.164338,-0.28669 -0.290127,-0.599241 -0.493015,-0.860087 -2.497392,-3.210699 -9.391004,-3.552476 -12.339729,-4.146308 -4.970011,-0.713872 -9.985776,-0.928715 -15.005391,-0.83787 -6.165967,0.09767 -12.3277284,0.368398 -18.47400637,0.883542 -5.02273063,0.429871 -10.06055963,0.989066 -15.10831563,0.820856 -1.163956,-0.105462 -6.974141,-0.696089 1.961515,0.566096 0.526376,0.07439 -1.038587,-0.236046 -1.542152,-0.406401 -0.809755,-0.273956 -1.763942,-0.734921 -2.449471,-1.261347 -0.322126,-0.247367 -0.587314,-0.561139 -0.880971,-0.841713 -0.219402,-0.320574 -0.474238,-0.619576 -0.658205,-0.961715 -1.019793,-1.896567 -0.743397,-4.018563 0.199397,-5.874826 0.263715,-0.399961 0.491641,-0.825981 0.791147,-1.199898 1.909278,-2.383618 4.835437,-3.677696 7.572481,-4.828455 1.8398265,-0.653745 2.285574,-0.852964 4.194197,-1.362567 3.0881907,-0.82453 6.25596083,-1.338091 9.4324626,-1.665666 5.16848,-0.411596 10.3548174,-0.48425 15.5251134,-0.01483 5.307134,0.476988 10.592364,1.149583 15.845044,2.051977 0.878495,0.145279 1.752532,0.320721 2.635489,0.435827 0.594486,0.0775 -2.360087,-0.424952 -1.76932,-0.32291 5.025767,0.868134 10.043306,1.787719 15.082704,2.575452 5.24333,0.798078 10.496463,1.535504 15.768029,2.123257 3.891483,0.409498 5.830557,0.72045 9.743054,0.858143 1.536296,0.0206 3.102847,0.04596 4.581843,-0.441068 0.291932,-0.135695 1.27923,-0.646643 1.223114,-0.764424 -0.0561,-0.117773 -1.721982,-0.03904 -2.266975,0.04534 z"
+         sodipodi:nodetypes="cccccccscscscssccccssscscccccsccscscscccscscscscscccccscsccccssscscscscccssccccccc"
+         inkscape:label="Drawing Line" />
+      <path
+         style="display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.734482;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;paint-order:normal"
+         d="m 81.186784,77.885509 1.541214,-1.665496 -2.014529,-0.452265 z"
+         id="path9288"
+         inkscape:label="Pencil Lead" />
+    </g>
+    <text
+       xml:space="preserve"
+       id="text2719"
+       style="font-size:144px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect2721);display:inline;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:15.1181;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill;stroke-linecap:round;stroke-linejoin:round"
+       inkscape:label="Text"
+       inkscape:export-filename="..\src\com\fishtankapps\bookitbaby\images\drew-or-false-text.png"
+       inkscape:export-xdpi="96"
+       inkscape:export-ydpi="96"
+       transform="matrix(0.14844987,-0.01772083,0.01772083,0.14844987,-17.225404,-69.130563)"><tspan
+         x="-341.07617"
+         y="675.7271"
+         id="tspan7994"><tspan
+           style="font-family:'Freestyle Script';-inkscape-font-specification:'Freestyle Script'"
+           id="tspan7992">
+</tspan></tspan><tspan
+         x="-341.07617"
+         y="870.45226"
+         id="tspan7998"><tspan
+           style="font-family:'Kristen ITC';-inkscape-font-specification:'Kristen ITC'"
+           id="tspan7996">Drew or False!
+</tspan></tspan><tspan
+         x="-341.07617"
+         y="1054.6341"
+         id="tspan8002"><tspan
+           style="font-family:'Lucida Handwriting';-inkscape-font-specification:'Lucida Handwriting'"
+           id="tspan8000">
+</tspan></tspan></text>
+  </g>
+</svg>
