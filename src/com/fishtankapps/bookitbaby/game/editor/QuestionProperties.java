@@ -9,6 +9,7 @@ import com.fishtankapps.bookitbaby.questions.DrewOrFalse;
 import com.fishtankapps.bookitbaby.questions.MultiplingChoice;
 import com.fishtankapps.bookitbaby.questions.Patching;
 import com.fishtankapps.bookitbaby.questions.PhilInTheBlank;
+import com.fishtankapps.bookitbaby.questions.QuestionDraft;
 import com.fishtankapps.bookitbaby.questions.SongAnswer;
 
 public class QuestionProperties {
@@ -29,23 +30,33 @@ public class QuestionProperties {
 	private ArrayList<String> incorrectAnswers;
 	private ArrayList<Boolean> wordVisibility;
 	
+	private QuestionPropertiesEditor editor;
+	private QuestionPropertiesButton button;
+	
 	public QuestionProperties() {
-		type = null;
+		type = QuestionType.MULTIPLYING_CHOICE;
 		
 		isChristInContext = false;
 		
-		prompt = "";
-		answer = "";
+		prompt = " ";
+		answer = " ";
 		songFile = "";
 		
-		letterIndex = -1;
-		timerLength = -1;
+		letterIndex = 0;
+		timerLength = 90_000;
 		
 		incorrectAnswers = new ArrayList<>();
 		wordVisibility = new ArrayList<>();
 		changeListeners = new ArrayList<>();
 		
 		//editor = new QuestionPropertiesEditor(this, null);
+		
+		button = new QuestionPropertiesButton(-1, type, "  ");
+		editor = new QuestionPropertiesEditor(this);
+		
+		changeListeners.add((qp, p) -> {
+			button.updateQuestionValidity(canGenerateQuestionType(type));
+		});
 	}
 	public QuestionProperties(Question question) {
 		this();
@@ -93,12 +104,33 @@ public class QuestionProperties {
 			prompt = q.getPrompt();
 			answer = q.getSongName();
 			songFile = q.getSongFileName();
+			
+		} else if (question instanceof QuestionDraft) {
+			QuestionDraft q = (QuestionDraft) question;
+			
+			type = q.getQuestionType();
+			isChristInContext = q.isChristInContextQuestion();
+			prompt = q.getPrompt();
+			answer = q.getAnswer();
+			songFile = q.getSongFile();
+			timerLength = q.getTimeLimit();
+			letterIndex = q.getLetterIndex();
+			
+			incorrectAnswers = q.getIncorrectAnswers();
+			wordVisibility = q.getWordVisibility();
 		}
+		
+		button.updatePrompt(prompt);
+		button.updateType(type);
+		button.updateQuestionValidity(canGenerateQuestionType(type));
+		editor.refresh();
 	}
+	
 	
 	public void addOnChangeListener(OnChangeListener l) {
 		changeListeners.add(l);
 	}
+	
 	
 	public QuestionType getQuestionType() {
 		return type;
@@ -141,10 +173,12 @@ public class QuestionProperties {
 	
 	public void setQuestionType(QuestionType type) {
 		this.type = type;
+		button.updateType(type);
 		notifyChangeListeners(Property.QUESTION_TYPE);
 	}
 	public void setPrompt(String prompt) {
 		this.prompt = prompt;
+		button.updatePrompt(prompt);
 		notifyChangeListeners(Property.PROMPT);
 	}
 	public void setAnswer(String answer) {
@@ -181,6 +215,10 @@ public class QuestionProperties {
 		this.wordVisibility = wordVisibility;
 		notifyChangeListeners(Property.WORD_VISIBILITY);
 	}
+	public void setWordVisibility(int index, boolean visibility) {
+		this.wordVisibility.set(index, visibility);
+		notifyChangeListeners(Property.WORD_VISIBILITY);
+	}
 	public void setIsChristInContextQuestion(boolean isChristInContext) {
 		this.isChristInContext = isChristInContext;
 		notifyChangeListeners(Property.IS_CHRIST_IN_CONTEXT);
@@ -192,42 +230,15 @@ public class QuestionProperties {
 	}
 	
 	
-	public boolean canGenerateQuestionType(QuestionType type) {
+	public Question generateQuestion(boolean allowDrafts) {
 		
-		if (type == QuestionType.DREW_OR_FALSE)
-			return canGenerateDrewOrFalse();
-		else if (type == QuestionType.MULTIPLYING_CHOICE)
-			return canGenerateMultiplingChoice();
-		else if (type == QuestionType.PATCHING)
-			return canGeneratePatching();
-		else if (type == QuestionType.PHIL_IN_THE_BLANK)
-			return canGeneratePhilInTheBlank();
-		else if (type == QuestionType.SONG_ANSWER)
-			return canGenerateSongAnswer();
-		else
-			return false;		
-	}
-	public boolean canGenerateDrewOrFalse() {
-		return !prompt.equals("") && timerLength != -1;
-	}
-	public boolean canGenerateMultiplingChoice() {
-		return !prompt.equals("") && !answer.equals("") && incorrectAnswers.size() > 0;
-	}
-	public boolean canGeneratePatching() {
-		return !prompt.equals("") && !answer.equals("") && wordVisibility.size() > 0;
-	}
-	public boolean canGeneratePhilInTheBlank() {
-		return !prompt.equals("") && !answer.equals("") && letterIndex != -1;
-	}
-	public boolean canGenerateSongAnswer() {
-		return !prompt.equals("") && !answer.equals("") && !songFile.equals("");
-	}
-	
-	
-	public Question generateQuestion() {
-		
-		if(!canGenerateQuestionType(type))
-			return null;
+		if(!canGenerateValidQuestion()) {
+			if(allowDrafts)
+				return new QuestionDraft(this);
+			else
+				return null;
+		}
+			
 		
 		Question q = null;
 		
@@ -247,7 +258,49 @@ public class QuestionProperties {
 		
 		return q;
 	}
-
+	
+	public boolean canGenerateValidQuestion() {
+		return canGenerateQuestionType(type);
+	}
+	
+	public boolean canGenerateQuestionType(QuestionType type) {
+		
+		if (type == QuestionType.DREW_OR_FALSE)
+			return canGenerateDrewOrFalse();
+		else if (type == QuestionType.MULTIPLYING_CHOICE)
+			return canGenerateMultiplingChoice();
+		else if (type == QuestionType.PATCHING)
+			return canGeneratePatching();
+		else if (type == QuestionType.PHIL_IN_THE_BLANK)
+			return canGeneratePhilInTheBlank();
+		else if (type == QuestionType.SONG_ANSWER)
+			return canGenerateSongAnswer();
+		else
+			return false;		
+	}
+	public boolean canGenerateDrewOrFalse() {
+		return !prompt.trim().equals("") && timerLength > 0;
+	}
+	public boolean canGenerateMultiplingChoice() {
+		return !prompt.trim().equals("") && !answer.trim().equals("") && incorrectAnswers.size() > 1;
+	}
+	public boolean canGeneratePatching() {
+		return !prompt.trim().equals("") && !answer.trim().equals("") && wordVisibility.size() > 0;
+	}
+	public boolean canGeneratePhilInTheBlank() {
+		return !prompt.trim().equals("") && !answer.trim().equals("") && letterIndex != -1;
+	}
+	public boolean canGenerateSongAnswer() {
+		return !prompt.trim().equals("") && !answer.trim().equals("") && songFile != null && !songFile.trim().equals("");
+	}
+	
+	public QuestionPropertiesButton getQuestionPropertiesButton() {
+		return button;
+	}
+	public QuestionPropertiesEditor getQuestionPropertiesEditor() {
+		return editor;
+	}
+	
 	public static interface OnChangeListener {
 		public void onChange(QuestionProperties qp, Property p);
 	}
@@ -256,5 +309,5 @@ public class QuestionProperties {
 		QUESTION_TYPE, IS_CHRIST_IN_CONTEXT, PROMPT, ANSWER, SONG_FILE, TIMER_LENGTH, LETTER_INDEX,
 			INCORRECT_ANSWERS, WORD_VISIBILITY;
 	}
-	
+
 }

@@ -3,7 +3,11 @@ package com.fishtankapps.bookitbaby.game.editor;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -32,6 +36,7 @@ public class GameEditor {
 	};
 	
 	private JFrame frame;
+	private Clip playingClip;
 	
 	public GameEditor(JFrame frame) {
 		questionProperties = new ArrayList<>();
@@ -41,6 +46,15 @@ public class GameEditor {
 		questionPropertiesListChangeListeners = new ArrayList<>();
 		selectedQuestionPropertiesListeners = new ArrayList<>();
 		questionPropertiesChangeListeners = new ArrayList<>();
+	}
+	
+	public void clearGame() {
+		questionProperties.clear();
+		
+		for(QuestionPropertiesListChangeListener l : questionPropertiesListChangeListeners)
+			l.onListChange();
+		
+		clearSelectedQuestionProperties();	
 	}
 	
 	public void openGame(BookItBabyGame game) {
@@ -57,6 +71,8 @@ public class GameEditor {
 		
 		for(QuestionPropertiesListChangeListener l : questionPropertiesListChangeListeners)
 			l.onListChange();
+		
+		clearSelectedQuestionProperties();	
 	}
 	
 	public void addQuestionProperties(QuestionProperties qp) {
@@ -66,14 +82,26 @@ public class GameEditor {
 		for(QuestionPropertiesListChangeListener l : questionPropertiesListChangeListeners)
 			l.onListChange();
 	}
-	
-	public void removeQuestionProperties(int index) {
-		questionProperties.remove(index);
+	public void addNewQuestionPropertiesAfterSelected() {
+		QuestionProperties qp = new QuestionProperties();
+		qp.addOnChangeListener(ON_QUESTION_PROPETIES_CHANGED);
+		qp.getQuestionPropertiesButton().setIsSelected(true);
+		
+		if(selectedProperties == null) {
+			questionProperties.add(qp);
+			
+		} else {
+			getSelectedQuestionProperties().getQuestionPropertiesButton().setIsSelected(false);
+			questionProperties.add(getSelectedQuestionPropertiesIndex() + 1, qp);		
+		}
+		
+		selectQuestionProperties(qp);
 		
 		for(QuestionPropertiesListChangeListener l : questionPropertiesListChangeListeners)
 			l.onListChange();
 	}
-	public void removeQuestionProperties(QuestionProperties qp) {
+	
+	private void removeQuestionProperties(QuestionProperties qp) {
 		questionProperties.remove(qp);
 		
 		for(QuestionPropertiesListChangeListener l : questionPropertiesListChangeListeners)
@@ -81,11 +109,18 @@ public class GameEditor {
 	}
 	public void removeSelectedQuestionProperties() {
 		removeQuestionProperties(selectedProperties);
+		clearSelectedQuestionProperties();
+	}
+	
+	public void shuffleQuestions() {
+		Collections.shuffle(questionProperties);
 		
 		for(QuestionPropertiesListChangeListener l : questionPropertiesListChangeListeners)
 			l.onListChange();
+		for(SelectedQuestionPropertiesListener l : selectedQuestionPropertiesListeners)
+			l.onSelectedQuestionPropertiesChanged(selectedProperties);
 	}
-		
+	
 	public void selectQuestionProperties(int index) {
 		selectedProperties = questionProperties.get(index);
 		
@@ -105,7 +140,6 @@ public class GameEditor {
 		for(SelectedQuestionPropertiesListener l : selectedQuestionPropertiesListeners)
 			l.onSelectedQuestionPropertiesChanged(selectedProperties);
 	}
-	
 	
 	public QuestionProperties getSelectedQuestionProperties() {
 		return selectedProperties;
@@ -129,6 +163,15 @@ public class GameEditor {
 
 		return prompts;
 	}
+	public QuestionPropertiesButton[] getQuestionPropertiesButtons() {
+		QuestionPropertiesButton[] buttons = new QuestionPropertiesButton[questionProperties.size()];
+		
+		for(int i = 0; i < buttons.length; i++) {
+			buttons[i] = questionProperties.get(i).getQuestionPropertiesButton();
+		}
+		
+		return buttons;
+	}
 	
 	public void addFile() {
 		JFileChooser fileChooser = new JFileChooser();
@@ -149,6 +192,28 @@ public class GameEditor {
 					"Error Loading File", JOptionPane.ERROR_MESSAGE);
 		}
 	}
+	public ArrayList<File> pruneFileList() {
+		boolean[] filesUsed = new boolean[files.size()];
+		
+		for(int i = 0; i < filesUsed.length; i++)
+			filesUsed[i] = false;
+		
+		for(QuestionProperties qp : questionProperties) {
+			String fileName = qp.getSongFile();
+			
+			for(int i = 0; i < filesUsed.length; i++)
+				filesUsed[i] = filesUsed[i] || files.get(i).getName().equals(fileName);
+		}
+		
+		ArrayList<File> pruned = new ArrayList<>();
+		for(int i = 0; i < filesUsed.length; i++)
+			if(filesUsed[i])
+				pruned.add(files.get(i));
+		
+		return pruned;				
+	}
+	
+
 	public void addSelectedQuestionPropertiesListener(SelectedQuestionPropertiesListener l) {
 		selectedQuestionPropertiesListeners.add(l);
 	}
@@ -158,13 +223,43 @@ public class GameEditor {
 	public void addQuestionPropertiesListChangeListener(QuestionPropertiesListChangeListener l) {
 		questionPropertiesListChangeListeners.add(l);
 	}
+		
 	
+	public void previewAudioFile(String fileName, JComponent component) {
+		if(playingClip != null) {
+			playingClip.stop();
+			playingClip.close();
+		}
+		
+		for(File file : files) {
+			if(file.getName().equals(fileName)) {
+				try {
+					playingClip = AudioSystem.getClip(); 
+					playingClip.open(AudioSystem.getAudioInputStream(file));
+					playingClip.start();
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(component, "Unable to play audio file: " + file.getName() + "\nPlease make sure the file is a WAV audio file.", "Unable to Play Audio", JOptionPane.ERROR_MESSAGE);
+					playingClip.stop();
+					playingClip.close();
+				}
+				
+				break;
+			}
+		}
+	}
+	public void stopPreviewedAudioFile() {
+		if(playingClip != null) {
+			playingClip.stop();
+			playingClip.close();
+			playingClip = null;
+		}
+	}
 	
-	public BookItBabyGame createGame() {
+	public BookItBabyGame createGame(boolean allowQuestionDrafts) {
 		BookItBabyGame game = new BookItBabyGame();
 		
 		for(QuestionProperties qp : questionProperties) {
-			Question question = qp.generateQuestion();
+			Question question = qp.generateQuestion(allowQuestionDrafts);
 			
 			if(question != null)
 				game.getQuestions().add(question);
@@ -172,9 +267,20 @@ public class GameEditor {
 				System.out.println("Question was unsucessully generated.");
 		}
 		
-		game.shuffleQuestions();
+		if(files.size() > 0)
+			game.setUnzipLocation(files.get(0).getParentFile());
 		
 		return game;
+	}
+	public boolean isGameComplete() {
+		for(QuestionProperties qp : questionProperties)
+			if(!qp.canGenerateValidQuestion())
+				return false;
+
+		return true;
+	}
+	public void saveGameToFile(File file, boolean allowQuestionDrafts) {
+		BookItBabyGame.createGameFile(pruneFileList(), createGame(allowQuestionDrafts), file);
 	}
 	
 	public static interface SelectedQuestionPropertiesListener {

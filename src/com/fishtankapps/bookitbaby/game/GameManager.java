@@ -50,6 +50,7 @@ public class GameManager {
 	
 	public GameManager(BookItBabyGame game) {
 		this.game = game;
+		this.game.removeQuestionDrafts();
 		
 		buzzedInTeam = Team.NONE;
 		
@@ -78,6 +79,7 @@ public class GameManager {
 	
 	void setGame(BookItBabyGame game) {
 		this.game = game;
+		this.game.removeQuestionDrafts();
 		
 		buzzedInTeam = Team.NONE;
 		

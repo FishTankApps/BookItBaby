@@ -1,10 +1,15 @@
 package com.fishtankapps.bookitbaby.game.editor;
 
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridBagLayout;
+import java.awt.event.ItemEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -25,21 +30,67 @@ public class QuestionPropertiesEditor extends JPanel {
 	private QuestionProperties qp;
 	private GameEditor editor;
 	
-	public QuestionPropertiesEditor(QuestionProperties qp, GameEditor editor) {
+	private JComboBox<QuestionType> questionType;
+	private JLabel questionLabel;
+	private JPanel typeEditorPanel;
+	
+	public QuestionPropertiesEditor(QuestionProperties qp) {
 		super(new GridBagLayout());
-		this.editor = editor;
 		this.qp = qp;
-				
-		qp.addOnChangeListener((updatedQp, property) -> {
-				if(property == QuestionProperties.Property.QUESTION_TYPE)
-					refresh();
-			});
 		
+		initComponents();
 		refresh();
 	}
 	
+	private void initComponents() {		
+		questionLabel = new JLabel("Question");
+		questionLabel.setFont(getFont().deriveFont(Font.BOLD, 16f));
+		
+		questionType = new JComboBox<>(QuestionType.values());
+		
+		questionType.setSelectedItem(qp.getQuestionType());	
+		questionType.addItemListener(this::onQuestionTypeChanged);
+		
+		JCheckBox isChristInContextCheckbox = new JCheckBox("Is Christ in Context Question");
+		isChristInContextCheckbox.setSelected(qp.isChristInContextQuestion());
+		isChristInContextCheckbox.addActionListener(e -> qp.setIsChristInContextQuestion(isChristInContextCheckbox.isSelected()));
+		
+		typeEditorPanel = new JPanel(new GridBagLayout());
+		
+		add(questionLabel,                ChainGBC.getInstance(0, 0).setFill(false).setWidthAndHeight(2, 1));
+		add(new JLabel("Question Type:"), ChainGBC.getInstance(0, 1).setFill(false));
+		add(questionType,                 ChainGBC.getInstance(1, 1).setFill(false));
+		add(isChristInContextCheckbox,    ChainGBC.getInstance(2, 1).setFill(false));
+		add(Box.createHorizontalGlue(),   ChainGBC.getInstance(3, 1).setFill(true, false));
+		
+		add(typeEditorPanel, ChainGBC.getInstance(0, 2).setFill(true, false).setWidthAndHeight(4, 1));
+		this.revalidate();
+	}
+	
+	
+	private void onQuestionTypeChanged(ItemEvent e) {
+		if(e.getStateChange() == ItemEvent.SELECTED) {
+			qp.setQuestionType((QuestionType) e.getItem());
+			refresh();
+		}
+	}
+	
+	public void setQuestionIndex(int index) {
+		questionLabel.setText("Question #" + (index + 1));
+	}
+	public void passGameEditor(GameEditor editor) {
+		if(this.editor == null) {
+			this.editor = editor;
+			refresh();
+		} else 
+			this.editor = editor;		
+	}
+	
+	
 	public void refresh() {
-		this.removeAll();
+		questionType.setSelectedItem(qp.getQuestionType());	
+		
+		typeEditorPanel.removeAll();
 		
 		if(qp.getQuestionType() == QuestionType.DREW_OR_FALSE)
 			addDrewOrFalseComponents();
@@ -53,26 +104,26 @@ public class QuestionPropertiesEditor extends JPanel {
 			addSongAnswerComponents();
 		}
 	
-		this.revalidate();
-		this.repaint();
+		typeEditorPanel.revalidate();
+		typeEditorPanel.repaint();
 	}
 	
 	private void addDrewOrFalseComponents() {
 		JLabel promptLabel = new JLabel("Drawing Prompt:", JLabel.RIGHT);
 		JTextField promptField = new JTextField(qp.getPrompt());
-		JLabel timeLimitLabel = new JLabel("Time Limit (in milliseconds):", JLabel.RIGHT);
-		JIntField timeLimitField = new JIntField(qp.getTimeLimit() + "");
+		JLabel timeLimitLabel = new JLabel("Time Limit (in seconds):", JLabel.RIGHT);
+		JIntField timeLimitField = new JIntField(qp.getTimeLimit() / 1000 + "");
 		
 		promptField.getDocument().addDocumentListener(new PropertyDocumentListener() {
 			public void onTextChanged(String s) { qp.setPrompt(s); }});
 		
 		timeLimitField.getDocument().addDocumentListener(new PropertyDocumentListener() {
-			public void onTextChanged(String s) { qp.setTimeLimit(timeLimitField.getValue()); }});
+			public void onTextChanged(String s) { qp.setTimeLimit(timeLimitField.getValue() * 1000); }});
 		
-		add(promptLabel,    ChainGBC.getInstance(0, 0).setFill(false));
-		add(promptField,    ChainGBC.getInstance(1, 0).setFill(true, false));
-		add(timeLimitLabel, ChainGBC.getInstance(0, 1).setFill(false));
-		add(timeLimitField, ChainGBC.getInstance(1, 1).setFill(true, false));
+		typeEditorPanel.add(promptLabel,    ChainGBC.getInstance(0, 0).setFill(false));
+		typeEditorPanel.add(promptField,    ChainGBC.getInstance(1, 0).setFill(true, false));
+		typeEditorPanel.add(timeLimitLabel, ChainGBC.getInstance(0, 1).setFill(false));
+		typeEditorPanel.add(timeLimitField, ChainGBC.getInstance(1, 1).setFill(true, false));
 	}
 	private void addMultipyingChoiceComponents() {
 		JLabel promptLabel = new JLabel("Prompt:", JLabel.RIGHT);
@@ -94,12 +145,12 @@ public class QuestionPropertiesEditor extends JPanel {
 			public void onTextChanged(String s) { qp.setIncorrectAnswers(s); }});
 		
 		
-		add(promptLabel,    ChainGBC.getInstance(0, 0).setFill(false));
-		add(promptField,    ChainGBC.getInstance(1, 0).setFill(true, false));
-		add(correctAnswerLabel, ChainGBC.getInstance(0, 1).setFill(false));
-		add(correctAnswerField, ChainGBC.getInstance(1, 1).setFill(true, false));
-		add(incorrectAnswerLabel, ChainGBC.getInstance(0, 2).setFill(false));
-		add(incorrectAnswerField, ChainGBC.getInstance(1, 2).setFill(true, false));
+		typeEditorPanel.add(promptLabel,    ChainGBC.getInstance(0, 0).setFill(false));
+		typeEditorPanel.add(promptField,    ChainGBC.getInstance(1, 0).setFill(true, false));
+		typeEditorPanel.add(correctAnswerLabel, ChainGBC.getInstance(0, 1).setFill(false));
+		typeEditorPanel.add(correctAnswerField, ChainGBC.getInstance(1, 1).setFill(true, false));
+		typeEditorPanel.add(incorrectAnswerLabel, ChainGBC.getInstance(0, 2).setFill(false));
+		typeEditorPanel.add(incorrectAnswerField, ChainGBC.getInstance(1, 2).setFill(true, false));
 	}
 	private void addPatchingComponents() {
 		JLabel promptLabel = new JLabel("Prompt:", JLabel.RIGHT);
@@ -132,10 +183,10 @@ public class QuestionPropertiesEditor extends JPanel {
 			JCheckBox box = new JCheckBox(array[i], qp.getWordVisibility().get(i));
 			
 			box.addActionListener(e -> {
-				qp.getWordVisibility().set(index, box.isSelected());
+				qp.setWordVisibility(index, box.isSelected());
 			});
 			
-			wordVisibilityPanel.add(box); // TODO: This
+			wordVisibilityPanel.add(box);
 		}
 		
 		wordVisibilityPanel.revalidate();
@@ -156,10 +207,10 @@ public class QuestionPropertiesEditor extends JPanel {
 					JCheckBox box = new JCheckBox(words[i], newWordVis.get(i));
 					
 					box.addActionListener(e -> {
-						qp.getWordVisibility().set(index, box.isSelected());
+						qp.setWordVisibility(index, box.isSelected());
 					});
 					
-					wordVisibilityPanel.add(box); // TODO: This
+					wordVisibilityPanel.add(box);
 				}
 				
 				wordVisibilityPanel.revalidate();
@@ -170,11 +221,11 @@ public class QuestionPropertiesEditor extends JPanel {
 			}
 		});
 		
-		add(promptLabel,    ChainGBC.getInstance(0, 0).setFill(false));
-		add(promptField,    ChainGBC.getInstance(1, 0).setFill(true, false));
-		add(answerLabel, ChainGBC.getInstance(0, 1).setFill(false));
-		add(answerField, ChainGBC.getInstance(1, 1).setFill(true, false));
-		add(wordVisibilityPanel, ChainGBC.getInstance(0, 2).setFill(true, false).setWidthAndHeight(2, 1));		
+		typeEditorPanel.add(promptLabel,    ChainGBC.getInstance(0, 0).setFill(false));
+		typeEditorPanel.add(promptField,    ChainGBC.getInstance(1, 0).setFill(true, false));
+		typeEditorPanel.add(answerLabel, ChainGBC.getInstance(0, 1).setFill(false));
+		typeEditorPanel.add(answerField, ChainGBC.getInstance(1, 1).setFill(true, false));
+		typeEditorPanel.add(wordVisibilityPanel, ChainGBC.getInstance(0, 2).setFill(true, false).setWidthAndHeight(2, 1));		
 	}
 	private void addPhilInTheBlankComponents() {
 		JLabel promptLabel = new JLabel("Prompt:", JLabel.RIGHT);
@@ -185,9 +236,10 @@ public class QuestionPropertiesEditor extends JPanel {
 		JLabel letterIndexLabel = new JLabel(getLetterIndexLabelText(qp.getLetterIndex()), JLabel.RIGHT);
 		JIntField letterIndexField = new JIntField(qp.getLetterIndex() + "");
 		
-		letterIndexField.addActionListener(e -> {
-				letterIndexLabel.setText(getLetterIndexLabelText(letterIndexField.getValue()));
-			});
+		
+		letterIndexField.getDocument().addDocumentListener(new PropertyDocumentListener() {
+			public void onTextChanged(String s) { letterIndexLabel.setText(getLetterIndexLabelText(letterIndexField.getValue())); }});
+		
 		
 		
 		promptField.getDocument().addDocumentListener(new PropertyDocumentListener() {
@@ -201,12 +253,12 @@ public class QuestionPropertiesEditor extends JPanel {
 			public void onTextChanged(String s) { qp.setLetterIndex(letterIndexField.getValue()); }});
 		
 		
-		add(promptLabel,    ChainGBC.getInstance(0, 0).setFill(false));
-		add(promptField,    ChainGBC.getInstance(1, 0).setFill(true, false));
-		add(answerLabel, ChainGBC.getInstance(0, 1).setFill(false));
-		add(answerField, ChainGBC.getInstance(1, 1).setFill(true, false));
-		add(letterIndexLabel, ChainGBC.getInstance(0, 2).setFill(false));
-		add(letterIndexField, ChainGBC.getInstance(1, 2).setFill(true, false));
+		typeEditorPanel.add(promptLabel,    ChainGBC.getInstance(0, 0).setFill(false));
+		typeEditorPanel.add(promptField,    ChainGBC.getInstance(1, 0).setFill(true, false));
+		typeEditorPanel.add(answerLabel, ChainGBC.getInstance(0, 1).setFill(false));
+		typeEditorPanel.add(answerField, ChainGBC.getInstance(1, 1).setFill(true, false));
+		typeEditorPanel.add(letterIndexLabel, ChainGBC.getInstance(0, 2).setFill(false));
+		typeEditorPanel.add(letterIndexField, ChainGBC.getInstance(1, 2).setFill(true, false));
 	}
 	private void addSongAnswerComponents() {
 		JLabel promptLabel = new JLabel("Prompt:", JLabel.RIGHT);
@@ -216,7 +268,14 @@ public class QuestionPropertiesEditor extends JPanel {
 		
 
 		JLabel songFileLabel = new JLabel("Audio File:", JLabel.RIGHT);
-		JComboBox<String> songFileField = new JComboBox<>(editor.getFileNames());
+		JComboBox<String> songFileField;
+		
+		if(editor != null ) {
+			songFileField = new JComboBox<>(editor.getFileNames());
+		} else {
+			songFileField = new JComboBox<>();
+		}
+		
 		
 		songFileField.setSelectedItem(qp.getSongFile());
 		
@@ -233,6 +292,22 @@ public class QuestionPropertiesEditor extends JPanel {
 			songFileField.setSelectedItem(selectedFileName);
 		});
 		
+		JButton previewSongButton = new JButton("Preview Song (Hold to Play)");
+		previewSongButton.addMouseListener(new MouseListener() {
+
+			public void mousePressed(MouseEvent e) {
+				editor.previewAudioFile(songFileField.getSelectedItem().toString(), QuestionPropertiesEditor.this);
+			}
+
+			public void mouseReleased(MouseEvent e) {
+				editor.stopPreviewedAudioFile();
+			}
+
+			public void mouseClicked(MouseEvent e) {}
+			public void mouseEntered(MouseEvent e) {}
+			public void mouseExited(MouseEvent e) {}			
+		});
+		
 		
 		promptField.getDocument().addDocumentListener(new PropertyDocumentListener() {
 			public void onTextChanged(String s) { qp.setPrompt(s); }});
@@ -242,13 +317,14 @@ public class QuestionPropertiesEditor extends JPanel {
 		
 		songFileField.addActionListener(e -> qp.setSongFile((String) songFileField.getSelectedItem()));
 
-		add(promptLabel,    ChainGBC.getInstance(0, 0).setFill(false));
-		add(promptField,    ChainGBC.getInstance(1, 0).setFill(true, false).setWidthAndHeight(3, 1));
-		add(songNameLabel,  ChainGBC.getInstance(0, 1).setFill(false));
-		add(songNameField,  ChainGBC.getInstance(1, 1).setFill(true, false).setWidthAndHeight(3, 1));
-		add(songFileLabel,  ChainGBC.getInstance(0, 2).setFill(false));
-		add(songFileField,  ChainGBC.getInstance(1, 2).setFill(false));
-		add(openFileButton, ChainGBC.getInstance(2, 2).setFill(false));
+		typeEditorPanel.add(promptLabel,    ChainGBC.getInstance(0, 0).setFill(false));
+		typeEditorPanel.add(promptField,    ChainGBC.getInstance(1, 0).setFill(true, false).setWidthAndHeight(4, 1));
+		typeEditorPanel.add(songNameLabel,  ChainGBC.getInstance(0, 1).setFill(false));
+		typeEditorPanel.add(songNameField,  ChainGBC.getInstance(1, 1).setFill(true, false).setWidthAndHeight(4, 1));
+		typeEditorPanel.add(songFileLabel,  ChainGBC.getInstance(0, 2).setFill(false));
+		typeEditorPanel.add(songFileField,  ChainGBC.getInstance(1, 2).setFill(false));
+		typeEditorPanel.add(openFileButton, ChainGBC.getInstance(2, 2).setFill(false));
+		typeEditorPanel.add(previewSongButton, ChainGBC.getInstance(3, 2).setFill(false));
 	}
 	
 	private String getLetterIndexLabelText(int index) {

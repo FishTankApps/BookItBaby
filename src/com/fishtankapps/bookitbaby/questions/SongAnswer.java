@@ -70,10 +70,15 @@ public class SongAnswer extends Question {
 		panel.setBackground(Constants.TRANSPARENT);
 		
 		OutlinedLabel promptLabel = new OutlinedLabel(prompt,  new Font("Bahnschrift", Font.PLAIN, Constants.PROMPT_FONT_SIZE), Constants.PROMPT_FONT_SIZE/4);
-		display = new AudioDisplay(songName, manager.getInternalFile(songFileName));
-		
 		panel.add(promptLabel, ChainGBC.getInstance(0, 0).setFill(true, false).setPadding(10));
-		panel.add(display,     ChainGBC.getInstance(0, 1).setFill(true, true).setPadding(10));
+		
+		try {
+			display = new AudioDisplay(songName, manager.getInternalFile(songFileName));		
+			panel.add(display,     ChainGBC.getInstance(0, 1).setFill(true, true).setPadding(10));
+		} catch (Exception e) {
+			
+		}
+		
 		
 		return panel;
 	}

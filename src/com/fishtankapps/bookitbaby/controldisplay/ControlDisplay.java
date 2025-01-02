@@ -10,6 +10,7 @@ import java.awt.event.InputEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import javax.swing.BorderFactory;
@@ -48,6 +49,8 @@ import com.fishtankapps.communication.Client;
 
 public class ControlDisplay {
 
+	private ArrayList<ShutdownListener> shutdownListeners;
+	
 	private JFrame frame;
 	private GameManager manager;
 	private JPanel questionButtonPanel;	
@@ -57,8 +60,10 @@ public class ControlDisplay {
 	private JPanel buzzedInTeamDisplay;
 	private JCheckBoxMenuItem autoSaveProgress;
 	
-	public ControlDisplay(GameManager manager) {
+	private ControlDisplay(GameManager manager) {
 		this.manager = manager;
+		
+		shutdownListeners = new ArrayList<>();
 		client = null;
 		
 		initJFrame();
@@ -717,10 +722,14 @@ public class ControlDisplay {
 		if(option == JOptionPane.YES_OPTION) {
 			frame.dispose();
 			manager.sendGameEvent(GameEvent.SHUTDOWN);
-			System.exit(0);
+			
+			for(ShutdownListener l : shutdownListeners)
+				l.onShutdown();
 		}
 	}
-
+	public void addShutdownListener(ShutdownListener l) {
+		shutdownListeners.add(l);
+	}
 	
 	private void viewPreviousSnapshots() {
 		File[] snapshots = GameSnapshot.checkForPreviousSnapshots(manager);
@@ -739,5 +748,14 @@ public class ControlDisplay {
 	private void saveGameProgress() {
 		GameSnapshot snapshot = manager.createGameSnapshot();
 		GameSnapshot.saveSnapshot(snapshot);
+	}
+
+
+	public static ControlDisplay launch(GameManager manager) {
+		return new ControlDisplay(manager);
+	}
+
+	public static interface ShutdownListener {
+		public void onShutdown();
 	}
 }	

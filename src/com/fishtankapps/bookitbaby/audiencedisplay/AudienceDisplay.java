@@ -41,7 +41,7 @@ public class AudienceDisplay {
 	private JPanel questionDisplayPanel;
 	private AnimationGroup currentAnimationGroup;
 	
- 	public AudienceDisplay(GameManager manager) {
+ 	private AudienceDisplay(GameManager manager) {
 		this.manager = manager;
 		currentAnimationGroup = null;
 		
@@ -310,6 +310,10 @@ public class AudienceDisplay {
 			dialog.dispose();
 			if(animationThread != null)
 				animationThread.interrupt();
+			
+			if(currentAnimationGroup != null)
+				currentAnimationGroup.stop();
+			
 		} else if (event == GameEvent.OPEN_CURTAIN)
 			openCurtain();
 		else if (event == GameEvent.RESET_CURTAIN)
@@ -327,5 +331,10 @@ public class AudienceDisplay {
 		
 		if(manager.getCurrentQuestion() != null)
 			manager.getCurrentQuestion().handleGameEvent(event);
+	}
+
+
+	public static AudienceDisplay launch(GameManager manager) {
+		return new AudienceDisplay(manager);
 	}
 }

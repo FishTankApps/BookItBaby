@@ -104,6 +104,10 @@ public class JIntField extends JTextField {
 
 	
 	public int getValue() {
-		return Integer.parseInt(getText());
+		try {
+			return Integer.parseInt(getText());
+		} catch (Exception e) {
+			return 0;
+		}
 	}
 }

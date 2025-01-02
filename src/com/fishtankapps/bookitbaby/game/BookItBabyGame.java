@@ -13,6 +13,7 @@ import com.fishtankapps.bookitbaby.questions.DrewOrFalse;
 import com.fishtankapps.bookitbaby.questions.MultiplingChoice;
 import com.fishtankapps.bookitbaby.questions.Patching;
 import com.fishtankapps.bookitbaby.questions.PhilInTheBlank;
+import com.fishtankapps.bookitbaby.questions.QuestionDraft;
 import com.fishtankapps.bookitbaby.questions.SongAnswer;
 import com.fishtankapps.bookitbaby.util.FileUtils;
 import com.thoughtworks.xstream.XStream;
@@ -35,12 +36,18 @@ public class BookItBabyGame implements Serializable {
 		Collections.shuffle(questions);
 	}
 	
-	private void setUnzipLocation(File file) {
+	public void setUnzipLocation(File file) {
 		unzipLocation = file;
 	}
 	
 	public ArrayList<Question> getQuestions() {
 		return questions;
+	}
+	
+	public void removeQuestionDrafts() {
+		for(int i = 0; i < questions.size(); i++)
+			if(questions.get(i) instanceof QuestionDraft)
+				questions.remove(i--);
 	}
 	
 	public File getInternalFile(String name) {
@@ -128,7 +135,8 @@ public class BookItBabyGame implements Serializable {
 		XStream xStream = new XStream(new DomDriver());
 		
 		xStream.allowTypes(new Class[] {BookItBabyGame.class, DrewOrFalse.class, MultiplingChoice.class,
-				                        Patching.class, PhilInTheBlank.class, SongAnswer.class, ChristInContextQuestion.class});
+				                        Patching.class, PhilInTheBlank.class, SongAnswer.class, 
+				                        ChristInContextQuestion.class, QuestionDraft.class});
 		
 		return xStream;
 	}
