@@ -12,6 +12,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import com.fishtankapps.bookitbaby.configuration.BookItBabyConfiguration;
 import com.fishtankapps.bookitbaby.game.BookItBabyGame;
 import com.fishtankapps.bookitbaby.game.Question;
 import com.fishtankapps.bookitbaby.game.editor.QuestionProperties.OnChangeListener;
@@ -176,7 +177,9 @@ public class GameEditor {
 	public void addFile() {
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setDialogTitle("Chooser Audio File");
-		fileChooser.showOpenDialog(frame);
+		fileChooser.setCurrentDirectory(new File(BookItBabyConfiguration.getLastOpenedAudioPath()));
+		
+		fileChooser.showOpenDialog(frame);		
 		
 		File f = fileChooser.getSelectedFile();
 		
@@ -185,7 +188,9 @@ public class GameEditor {
 		
 		File tempFile = FileUtils.createTempFile(f.getName(), "", "game-configuration", false);
 		try {
-			FileUtils.copyFile(f, tempFile.getAbsolutePath());
+			FileUtils.copyFile(f, tempFile.getAbsolutePath());			
+			BookItBabyConfiguration.setLastOpenedAudioPath(f.getParent());
+			
 			files.add(tempFile);
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(frame, "There was an error trying to load the file:\n" + e.getMessage(), 

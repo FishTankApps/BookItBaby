@@ -13,8 +13,7 @@ import com.fishtankapps.bookitbaby.util.FontLoader;
 public class Launcher {
 
 	public static void main(String[] args) {
-		//launch(args);
-		launch(new String[] {"C:\\Users\\Whitaker\\Documents\\Christian\\BookItBaby!\\AiG Unit 5 Review.bbgz"});
+		launch(args);
 	}
 	
 	private static void launch(String[] args) {
@@ -40,6 +39,6 @@ public class Launcher {
 		} catch (Exception e) {e.printStackTrace();}
 		
 		GameManager manager = new GameManager();				
-		new CompetitorDisplay(manager);
+		CompetitorDisplay.launch(manager);
 	}
 }

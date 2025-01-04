@@ -299,7 +299,6 @@ public class AudienceDisplay {
 	private void handleKeyPress(KeyEvent e) {
 		if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
 			manager.sendGameEvent(GameEvent.SHUTDOWN);
-			System.exit(0);
 		} else if(e.getKeyCode() == KeyEvent.VK_C)
 			openCurtain();
 	}

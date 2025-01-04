@@ -73,6 +73,10 @@ public class ImageManager {
 	
 	public static BufferedImage CHRIST_IN_CONTEXT_BADGE = null;
 	
+	public static BufferedImage PLAY_GAME_BUTTON_UP = null;
+	public static BufferedImage PLAY_GAME_BUTTON_DOWN = null;
+	public static BufferedImage PLAY_GAME_BUTTON_UP_DARK = null;
+	
 	
 	public static BufferedImage[] CURTAIN_OPENNING_ANIMATION = null;
 

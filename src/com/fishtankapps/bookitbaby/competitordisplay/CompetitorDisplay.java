@@ -43,7 +43,7 @@ public class CompetitorDisplay {
 	private AnimationGroup currentAnimationGroup;
 	private boolean validBuzzerMoment;
 	
-	public CompetitorDisplay(GameManager manager) {
+	private CompetitorDisplay(GameManager manager) {
 		this.manager = manager;
 		validBuzzerMoment = false;
 		
@@ -250,5 +250,9 @@ public class CompetitorDisplay {
 		return validBuzzerMoment && manager.getBuzzedInTeam() == Team.NONE &&
 				manager.getCurrentQuestion() != null && 
 				!(manager.getCurrentQuestion() instanceof DrewOrFalse);
+	}
+
+	public static CompetitorDisplay launch(GameManager manager) {
+		return new CompetitorDisplay(manager);
 	}
 }

@@ -7,6 +7,7 @@ import java.awt.Font;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
@@ -30,6 +31,7 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.text.JTextComponent;
 
+import com.fishtankapps.bookitbaby.configuration.BookItBabyConfiguration;
 import com.fishtankapps.bookitbaby.game.GameEvent;
 import com.fishtankapps.bookitbaby.game.GameManager;
 import com.fishtankapps.bookitbaby.game.GameSnapshot;
@@ -92,7 +94,7 @@ public class ControlDisplay {
 		frame.addWindowListener(new WindowListener() {
 			
 			public void windowClosing(WindowEvent e) {
-				onWindowClosing();
+				onWindowClosing(true);
 			}
 
 			public void windowOpened(WindowEvent e) {}
@@ -128,9 +130,11 @@ public class ControlDisplay {
 		
 		saveProgressItem.setAccelerator(KeyStroke.getKeyStroke('S', InputEvent.CTRL_DOWN_MASK));
 		loadProgressSnapshot.setAccelerator(KeyStroke.getKeyStroke('L', InputEvent.CTRL_DOWN_MASK));
-		exitItem.setAccelerator(KeyStroke.getKeyStroke('Q', InputEvent.CTRL_DOWN_MASK));
+		exitItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0));
 		
-		exitItem.addActionListener(e -> onWindowClosing());
+		//exitItem.setAccelerator(KeyStroke.getKeyStroke('Esc', InputEvent.CTRL_DOWN_MASK));
+		
+		exitItem.addActionListener(e -> onWindowClosing(true));
 		saveProgressItem.addActionListener(e -> saveGameProgress());
 		loadProgressSnapshot.addActionListener(e -> viewPreviousSnapshots());
 		
@@ -327,7 +331,7 @@ public class ControlDisplay {
 		remoteDisplayPanel.setBorder(BorderFactory.createTitledBorder("Remote Display"));
 		
 		JLabel ipLabel = new JLabel("IP Address:", JLabel.RIGHT);
-		JTextField ipAddress = new JTextField("192.168.8.120");
+		JTextField ipAddress = new JTextField(BookItBabyConfiguration.getLastConnectedIp());
 		
 		connectionStatusLabel = new JLabel("Statis: Disconnected", JLabel.CENTER);
 		
@@ -667,6 +671,7 @@ public class ControlDisplay {
 				client = null;
 			else {
 				manager.connectToRemoteManger(client, true);
+				BookItBabyConfiguration.setLastConnectedIp(ip);
 				//manager.clearCurrentQuestion();
 			}	
 		}).start();		
@@ -686,7 +691,7 @@ public class ControlDisplay {
 	private void handleGameEvent(GameEvent event) {
 		
 		if(event == GameEvent.SHUTDOWN)
-			frame.dispose();
+			onWindowClosing(false);
 		else if (event == GameEvent.BUZZ_IN_CLEAR)
 			buzzedInTeamDisplay.setBackground(null);
 		else if (event == GameEvent.RED_BUZZ_IN)
@@ -716,16 +721,23 @@ public class ControlDisplay {
 	}
 	
 	
-	private void onWindowClosing() {
-		int option = JOptionPane.showConfirmDialog(frame, "Are you sure that you would like to exit?", "Are You Sure?", JOptionPane.YES_NO_CANCEL_OPTION);
+	private void onWindowClosing(boolean ask) {
+		int option = JOptionPane.YES_OPTION;
+		
+		if(ask)
+			option = JOptionPane.showConfirmDialog(frame, "Are you sure that you would like to exit?", "Are You Sure?", JOptionPane.YES_NO_CANCEL_OPTION);
 		
 		if(option == JOptionPane.YES_OPTION) {
 			frame.dispose();
-			manager.sendGameEvent(GameEvent.SHUTDOWN);
+			
+			if(ask)
+				manager.sendGameEvent(GameEvent.SHUTDOWN);
 			
 			for(ShutdownListener l : shutdownListeners)
 				l.onShutdown();
 		}
+		
+		
 	}
 	public void addShutdownListener(ShutdownListener l) {
 		shutdownListeners.add(l);

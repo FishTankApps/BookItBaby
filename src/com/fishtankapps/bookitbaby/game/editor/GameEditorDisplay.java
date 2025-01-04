@@ -29,12 +29,14 @@ import javax.swing.KeyStroke;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.fishtankapps.bookitbaby.audiencedisplay.AudienceDisplay;
+import com.fishtankapps.bookitbaby.configuration.BookItBabyConfiguration;
 import com.fishtankapps.bookitbaby.controldisplay.ControlDisplay;
 import com.fishtankapps.bookitbaby.game.BookItBabyGame;
 import com.fishtankapps.bookitbaby.game.GameEvent;
 import com.fishtankapps.bookitbaby.game.GameManager;
 import com.fishtankapps.bookitbaby.game.Question;
 import com.fishtankapps.bookitbaby.gui.ChainGBC;
+import com.fishtankapps.bookitbaby.gui.NotificationDialog;
 import com.fishtankapps.bookitbaby.images.ImageManager;
 
 public class GameEditorDisplay {
@@ -42,6 +44,7 @@ public class GameEditorDisplay {
 	private static final int PREVIEW_WIDTH = 1600;
 	private static final int PREVIEW_HEIGHT = 500;
 	
+	private JLabel noQuestionSelectedLabel;
 	private JLabel incompleteQuestionLabel;
 
 	private Question previewedQuestion;
@@ -52,10 +55,14 @@ public class GameEditorDisplay {
 	
 	private long lastPreviewChange = 0;
 	private File openGameFile = null;
+	private boolean gameEdited = false;
 	
 	private GameEditorDisplay() {
 		gameEditor = new GameEditor(frame);
-		initJFrame();		
+		gameEditor.addQuestionPropertiesChangeListener(this::onGameEdit);
+		gameEditor.addQuestionPropertiesListChangeListener(this::onGameEdit);
+		initJFrame();	
+		BookItBabyConfiguration.getLastOpenedAudioPath();
 	}
 	
 	private GameEditorDisplay(String[] args) {
@@ -97,6 +104,7 @@ public class GameEditorDisplay {
 		frame.add(initEditPanel());		
 		frame.setVisible(true);
 	}
+	
 	private JMenuBar initMenuBar() {
 		JMenuBar menuBar = new JMenuBar();		
 		
@@ -156,10 +164,15 @@ public class GameEditorDisplay {
 		
 		gameEditor.addSelectedQuestionPropertiesListener(this::updateQuestionEditor);
 		
+		PlayGameButton playGameButton = new PlayGameButton();
+		playGameButton.addActionListeners(e -> playGame());
+		
 		
 		incompleteQuestionLabel = new JLabel("Incomplete Question", JLabel.CENTER);
 		incompleteQuestionLabel.setFont(incompleteQuestionLabel.getFont().deriveFont(Font.BOLD, 32f));
 		
+		noQuestionSelectedLabel = new JLabel("Select a Question to Display a Preview", JLabel.CENTER);
+		noQuestionSelectedLabel.setFont(noQuestionSelectedLabel.getFont().deriveFont(Font.BOLD, 32f));
 		
 		JPanel bottomPanel = new JPanel(new GridBagLayout());
 		bottomPanel.setBorder(BorderFactory.createTitledBorder("Display Preview"));
@@ -197,15 +210,15 @@ public class GameEditorDisplay {
 			}
 		};
 		
-		previewPanel.add(incompleteQuestionLabel);
+		previewPanel.add(noQuestionSelectedLabel);
 		Dimension previewPanelSize = new Dimension(PREVIEW_WIDTH, PREVIEW_HEIGHT);
 
 		previewPanel.setMaximumSize(previewPanelSize);
 		previewPanel.setMinimumSize(previewPanelSize);
 		previewPanel.setPreferredSize(previewPanelSize);
 		
-		gameEditor.addQuestionPropertiesChangeListener(this::updatePreviewPanel);
-		gameEditor.addSelectedQuestionPropertiesListener(this::updatePreviewPanel);
+		gameEditor.addQuestionPropertiesChangeListener((e1, e2, e3) -> updatePreviewPanel(true));
+		gameEditor.addSelectedQuestionPropertiesListener(e -> updatePreviewPanel(false));
 		
 		panel.add(previewPanel);
 		
@@ -216,7 +229,8 @@ public class GameEditorDisplay {
 		
 		editPanel.add(questionSelector,    ChainGBC.getInstance(0, 0).setFill(false, true).setWidthAndHeight(1, 2));
 		editPanel.add(questionEditorPanel, ChainGBC.getInstance(1, 0).setFill(true, false));
-		editPanel.add(bottomPanel,         ChainGBC.getInstance(1, 1).setFill(true, false));
+		editPanel.add(playGameButton,      ChainGBC.getInstance(2, 0).setFill(false, false));
+		editPanel.add(bottomPanel,         ChainGBC.getInstance(1, 1).setFill(true, false).setWidthAndHeight(2, 1));
 		
 		return editPanel;
 	}
@@ -237,23 +251,30 @@ public class GameEditorDisplay {
 		questionEditorPanel.revalidate();
 		questionEditorPanel.repaint();
 	}
-	private void updatePreviewPanel(Object... ignore) {
+	private void updatePreviewPanel(final boolean wait) {
 		
 		lastPreviewChange = System.currentTimeMillis();
 		final long longCurrentTime = lastPreviewChange;
 		
 		new Thread(() -> {
 			try {
-				Thread.sleep(1_000);
-				if(longCurrentTime == lastPreviewChange) {
+				if(wait)
+					Thread.sleep(1_000);
+				
+				if(longCurrentTime == lastPreviewChange || !wait) {
 					previewPanel.removeAll();
-					previewedQuestion = gameEditor.getSelectedQuestionProperties().generateQuestion(false);
 					
-					if(previewedQuestion != null) {
-						previewPanel.add(previewedQuestion.getQuestionDisplay(null));
+					if(gameEditor.getSelectedQuestionProperties() == null) {
+						previewPanel.add(noQuestionSelectedLabel);
 					} else {
-						previewPanel.add(incompleteQuestionLabel);
-					}
+						previewedQuestion = gameEditor.getSelectedQuestionProperties().generateQuestion(false);
+						
+						if(previewedQuestion != null) {
+							previewPanel.add(previewedQuestion.getQuestionDisplay(null));
+						} else {
+							previewPanel.add(incompleteQuestionLabel);
+						}
+					}				
 					
 					previewPanel.revalidate();
 					previewPanel.repaint();
@@ -261,6 +282,13 @@ public class GameEditorDisplay {
 			} catch (Exception e) {}
 		}).start();		
 		
+	}
+	
+	private void onGameEdit(Object... ignore) {
+		if(gameEdited == false) {
+			gameEdited = true;
+			frame.setTitle(frame.getTitle() + "*");
+		}
 	}
 	
 	public void playGame() {
@@ -280,22 +308,29 @@ public class GameEditorDisplay {
 		fileChooser.setDialogTitle("Open Book It, Baby! Game File");
 		fileChooser.setFileFilter(new FileNameExtensionFilter("Book It Baby! Game Files", "bbgz"));
 		fileChooser.setMultiSelectionEnabled(false);
+		fileChooser.setCurrentDirectory(new File(BookItBabyConfiguration.getLastOpenedGamePath()));
 		
 		int result = fileChooser.showOpenDialog(frame);
 		
 		if(result == JFileChooser.APPROVE_OPTION) {
 			if(openGameFile == null || JOptionPane.showConfirmDialog(frame, "Openning a new game will clear everything in memory.\nDo you want to continue?", "Are You Sure?", JOptionPane.YES_NO_CANCEL_OPTION) == JOptionPane.YES_OPTION) {
 				openFile(fileChooser.getSelectedFile());
+				BookItBabyConfiguration.setLastOpenedGamePath(fileChooser.getSelectedFile().getParent());
 			}			
 		}		
 	}
 	public void openFile(File f) {
 		try {
+			NotificationDialog dialog = new NotificationDialog("Opening File", "Opening the game file:\n" + f.getName(), frame.getIconImage());
+			
 			BookItBabyGame game = BookItBabyGame.openFile(f);			
 			gameEditor.openGame(game);		
 			
 			frame.setTitle("Book It, Baby! - " + f.getName());
 			openGameFile = f;
+			gameEdited = false;
+			
+			dialog.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -322,6 +357,7 @@ public class GameEditorDisplay {
 			fileChooser.setDialogTitle("Save Book It, Baby! Game File");
 			fileChooser.setFileFilter(new FileNameExtensionFilter("Book It Baby! Game Files", "bbgz"));
 			fileChooser.setMultiSelectionEnabled(false);
+			fileChooser.setCurrentDirectory(new File(BookItBabyConfiguration.getLastOpenedGamePath()));
 			
 			int result = fileChooser.showSaveDialog(frame);
 			
@@ -338,24 +374,43 @@ public class GameEditorDisplay {
 				}
 				
 				openGameFile = f;
+				BookItBabyConfiguration.setLastOpenedGamePath(f.getParent());
 				frame.setTitle("Book It, Baby! - " + openGameFile.getName());
-			}		
+				
+			} else
+				return;
 		}
 		
+		NotificationDialog dialog = new NotificationDialog("Saving File", "Saving the game file:\n" + openGameFile.getName(), frame.getIconImage());
+		
 		gameEditor.saveGameToFile(openGameFile, allowDrafts);
+		
+		dialog.close();
 	}
 	
 	public void createNewGame(ActionEvent e) {
 		if(JOptionPane.showConfirmDialog(frame, "Creating a new game will clear everything in memory.\nDo you want to continue?", "Are You Sure?", JOptionPane.YES_NO_CANCEL_OPTION) == JOptionPane.YES_OPTION) {
 			gameEditor.clearGame();
 			openGameFile = null;
+			gameEdited = false;
 			frame.setTitle("Book It, Baby!");
 		}
 	}
 	
 	private void onWindowClosing() {
+		
+		if(gameEdited) {
+			int choice = JOptionPane.showConfirmDialog(frame, "The open game has unsaved changes."
+					+ "\nWould you like to save them?", "Unsaved Changes", JOptionPane.YES_NO_CANCEL_OPTION);
+			
+			if(choice == JOptionPane.YES_OPTION)
+				saveToFile(false);
+			else if (choice == JOptionPane.CANCEL_OPTION || choice == JOptionPane.CLOSED_OPTION)
+				return;
+		}
+		
 		frame.dispose();
-		System.exit(0);
+		//System.exit(0);
 	}
 
 	public static GameEditorDisplay launch(String[] args) {
