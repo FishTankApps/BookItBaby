@@ -10,6 +10,7 @@ import java.util.Objects;
 
 import com.fishtankapps.bookitbaby.questions.ChristInContextQuestion;
 import com.fishtankapps.bookitbaby.questions.DrewOrFalse;
+import com.fishtankapps.bookitbaby.questions.GoFigure;
 import com.fishtankapps.bookitbaby.questions.MultiplingChoice;
 import com.fishtankapps.bookitbaby.questions.Patching;
 import com.fishtankapps.bookitbaby.questions.PhilInTheBlank;
@@ -136,7 +137,7 @@ public class BookItBabyGame implements Serializable {
 		
 		xStream.allowTypes(new Class[] {BookItBabyGame.class, DrewOrFalse.class, MultiplingChoice.class,
 				                        Patching.class, PhilInTheBlank.class, SongAnswer.class, 
-				                        ChristInContextQuestion.class, QuestionDraft.class});
+				                        ChristInContextQuestion.class, QuestionDraft.class, GoFigure.class});
 		
 		return xStream;
 	}

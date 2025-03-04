@@ -1,6 +1,7 @@
 package com.fishtankapps.bookitbaby.questions;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import javax.swing.JComponent;
 
@@ -95,12 +96,27 @@ public class QuestionDraft extends Question {
 
 	public void handleGameEvent(GameEvent gameEvent) {}
 
-	public boolean equals(Object o) {
-		return false;
-	}
-
+	@Override
 	public int hashCode() {
-		return 0;
+		return Objects.hash(answer, incorrectAnswers, isChristInContext, letterIndex, prompt, songFile, timerLength,
+				type, wordVisibility);
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		QuestionDraft other = (QuestionDraft) obj;
+		return Objects.equals(answer, other.answer) && Objects.equals(incorrectAnswers, other.incorrectAnswers)
+				&& isChristInContext == other.isChristInContext && letterIndex == other.letterIndex
+				&& Objects.equals(prompt, other.prompt) && Objects.equals(songFile, other.songFile)
+				&& timerLength == other.timerLength && type == other.type
+				&& Objects.equals(wordVisibility, other.wordVisibility);
+	}
+
+	
 }

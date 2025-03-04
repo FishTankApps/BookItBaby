@@ -374,9 +374,7 @@ public class GameEditorDisplay {
 				}
 				
 				openGameFile = f;
-				BookItBabyConfiguration.setLastOpenedGamePath(f.getParent());
-				frame.setTitle("Book It, Baby! - " + openGameFile.getName());
-				
+				BookItBabyConfiguration.setLastOpenedGamePath(f.getParent());				
 			} else
 				return;
 		}
@@ -384,6 +382,9 @@ public class GameEditorDisplay {
 		NotificationDialog dialog = new NotificationDialog("Saving File", "Saving the game file:\n" + openGameFile.getName(), frame.getIconImage());
 		
 		gameEditor.saveGameToFile(openGameFile, allowDrafts);
+		
+		gameEdited = false;
+		frame.setTitle("Book It, Baby! - " + openGameFile.getName());
 		
 		dialog.close();
 	}

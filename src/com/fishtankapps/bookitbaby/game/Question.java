@@ -22,7 +22,7 @@ public abstract class Question implements Serializable {
 	
 	public static enum QuestionType {
 		DREW_OR_FALSE("Drew or False"), MULTIPLYING_CHOICE("Multiplying Choice"), PATCHING("Patching"), 
-			PHIL_IN_THE_BLANK("Phil in the Blank"), SONG_ANSWER("Song Answer");
+			PHIL_IN_THE_BLANK("Phil in the Blank"), SONG_ANSWER("Song Answer"), GO_FIGURE("Go Figure");
 		
 		private String name;
 		private QuestionType(String name) {

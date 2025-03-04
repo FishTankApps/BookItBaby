@@ -63,7 +63,7 @@ public class QuestionPropertiesEditor extends JPanel {
 		add(isChristInContextCheckbox,    ChainGBC.getInstance(2, 1).setFill(false));
 		add(Box.createHorizontalGlue(),   ChainGBC.getInstance(3, 1).setFill(true, false));
 		
-		add(typeEditorPanel, ChainGBC.getInstance(0, 2).setFill(true, false).setWidthAndHeight(4, 1));
+		add(typeEditorPanel, ChainGBC.getInstance(0, 2).setFill(true, true).setWidthAndHeight(4, 1));
 		this.revalidate();
 	}
 	
@@ -98,11 +98,12 @@ public class QuestionPropertiesEditor extends JPanel {
 			addMultipyingChoiceComponents();
 		else if(qp.getQuestionType() == QuestionType.PATCHING)
 			addPatchingComponents();
-		else if(qp.getQuestionType() == QuestionType.PHIL_IN_THE_BLANK) {
+		else if(qp.getQuestionType() == QuestionType.PHIL_IN_THE_BLANK)
 			addPhilInTheBlankComponents();
-		} else if(qp.getQuestionType() == QuestionType.SONG_ANSWER) {
+		else if(qp.getQuestionType() == QuestionType.SONG_ANSWER)
 			addSongAnswerComponents();
-		}
+		else if(qp.getQuestionType() == QuestionType.GO_FIGURE)
+			addGoFigureComponents();
 	
 		typeEditorPanel.revalidate();
 		typeEditorPanel.repaint();
@@ -325,6 +326,16 @@ public class QuestionPropertiesEditor extends JPanel {
 		typeEditorPanel.add(songFileField,  ChainGBC.getInstance(1, 2).setFill(false));
 		typeEditorPanel.add(openFileButton, ChainGBC.getInstance(2, 2).setFill(false));
 		typeEditorPanel.add(previewSongButton, ChainGBC.getInstance(3, 2).setFill(false));
+	}
+	private void addGoFigureComponents() {
+		JLabel promptLabel = new JLabel("Acting Prompt:", JLabel.RIGHT);
+		JTextField promptField = new JTextField(qp.getPrompt());
+		
+		promptField.getDocument().addDocumentListener(new PropertyDocumentListener() {
+			public void onTextChanged(String s) { qp.setPrompt(s); }});
+		
+		typeEditorPanel.add(promptLabel,    ChainGBC.getInstance(0, 0).setFill(false));
+		typeEditorPanel.add(promptField,    ChainGBC.getInstance(1, 0).setFill(true, false));
 	}
 	
 	private String getLetterIndexLabelText(int index) {

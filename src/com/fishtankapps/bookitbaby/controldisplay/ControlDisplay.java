@@ -40,6 +40,7 @@ import com.fishtankapps.bookitbaby.gui.ChainGBC;
 import com.fishtankapps.bookitbaby.images.ImageManager;
 import com.fishtankapps.bookitbaby.questions.ChristInContextQuestion;
 import com.fishtankapps.bookitbaby.questions.DrewOrFalse;
+import com.fishtankapps.bookitbaby.questions.GoFigure;
 import com.fishtankapps.bookitbaby.questions.MultiplingChoice;
 import com.fishtankapps.bookitbaby.questions.Patching;
 import com.fishtankapps.bookitbaby.questions.PhilInTheBlank;
@@ -384,6 +385,7 @@ public class ControlDisplay {
 		JButton playSongButton = new JButton("Play Song");
 		JButton pauseSongButton = new JButton("Pause Song");
 		JButton revealNextOptionButton = new JButton("Reveal Next Option");
+		JButton revealPromptButton = new JButton("Reveal Prompt");
 		
 		JButton correctButton = new JButton("Correct");
 		JButton incorrectButton = new JButton("Incorrect");
@@ -395,6 +397,7 @@ public class ControlDisplay {
 		JButton pauseTimerButton = new JButton("Pause Timer");
 		
 		revealQuestionButton.setVisible(false);
+		revealPromptButton.setVisible(false);
 		revealAnswerButton.setVisible(false);
 		clearQuestionButton.setVisible(false);
 		playSongButton.setVisible(false);
@@ -408,6 +411,7 @@ public class ControlDisplay {
 		clearQuestionButton.addActionListener(l -> manager.clearCurrentQuestion());
 		
 		revealQuestionButton.addActionListener(  l -> manager.sendGameEvent(GameEvent.REVEAL_QUESTION));
+		revealPromptButton.addActionListener(    l -> manager.sendGameEvent(GameEvent.REVEAL_PROMPT));
 		revealAnswerButton.addActionListener(    l -> manager.sendGameEvent(GameEvent.REVEAL_ANSWER));
 		playSongButton.addActionListener(        l -> manager.sendGameEvent(GameEvent.PLAY_SONG));
 		pauseSongButton.addActionListener(       l -> manager.sendGameEvent(GameEvent.PAUSE_SONG));
@@ -421,6 +425,7 @@ public class ControlDisplay {
 		manager.addCurrentQuestionListener(question -> {
 			revealAnswerButton.setVisible(false);
 			clearQuestionButton.setVisible(false);
+			revealPromptButton.setVisible(false);
 			playSongButton.setVisible(false);
 			pauseSongButton.setVisible(false);
 			revealNextOptionButton.setVisible(false);
@@ -502,6 +507,18 @@ public class ControlDisplay {
 				questionAnswerLabel.setText("Question Answer: " + sa.getSongName());
 				questionTypeLabel.setText("Question Type: Song Answer");
 				questionOtherInfoLabel.setText("Other Info: Song File=\"" + sa.getSongName() + "\"");
+				
+			}  else if (question instanceof GoFigure) {
+				GoFigure sa = (GoFigure) question;
+				revealQuestionButton.setVisible(true);
+				revealPromptButton.setVisible(true);
+				revealAnswerButton.setVisible(true);
+				clearQuestionButton.setVisible(true);
+				correctButton.setVisible(true);
+				incorrectButton.setVisible(true);
+				
+				questionPromptLabel.setText("Acting Prompt: " + sa.getPrompt());
+				questionTypeLabel.setText("Question Type: Go Figure");
 			}
 		});
 		
@@ -513,21 +530,22 @@ public class ControlDisplay {
 		currentQuestionPanel.add(questionOtherInfoLabel, ChainGBC.getInstance(0, 3).setFill(false, false).setWidthAndHeight(100, 1));
 		
 		currentQuestionPanel.add(revealQuestionButton,  ChainGBC.getInstance(0, 4).setFill(false, false));
-		currentQuestionPanel.add(clearQuestionButton, ChainGBC.getInstance(1, 4).setFill(false, false));
-		currentQuestionPanel.add(revealAnswerButton,  ChainGBC.getInstance(2, 4).setFill(false, false));
+		currentQuestionPanel.add(revealPromptButton,  ChainGBC.getInstance(1, 4).setFill(false, false));
+		currentQuestionPanel.add(clearQuestionButton, ChainGBC.getInstance(2, 4).setFill(false, false));
+		currentQuestionPanel.add(revealAnswerButton,  ChainGBC.getInstance(3, 4).setFill(false, false));
 		
-		currentQuestionPanel.add(revealNextOptionButton, ChainGBC.getInstance(3, 4).setFill(false, false));
+		currentQuestionPanel.add(revealNextOptionButton, ChainGBC.getInstance(4, 4).setFill(false, false));
 		
-		currentQuestionPanel.add(playSongButton, ChainGBC.getInstance(3, 4).setFill(false, false));
-		currentQuestionPanel.add(pauseSongButton, ChainGBC.getInstance(4, 4).setFill(false, false));
+		currentQuestionPanel.add(playSongButton, ChainGBC.getInstance(5, 4).setFill(false, false));
+		currentQuestionPanel.add(pauseSongButton, ChainGBC.getInstance(6, 4).setFill(false, false));
 		
-		currentQuestionPanel.add(startTimerButton, ChainGBC.getInstance(3, 4).setFill(false, false));
-		currentQuestionPanel.add(pauseTimerButton, ChainGBC.getInstance(4, 4).setFill(false, false));		
+		currentQuestionPanel.add(startTimerButton, ChainGBC.getInstance(5, 4).setFill(false, false));
+		currentQuestionPanel.add(pauseTimerButton, ChainGBC.getInstance(6, 4).setFill(false, false));		
 		
-		currentQuestionPanel.add(Box.createHorizontalGlue(), ChainGBC.getInstance(5, 4).setFill(true, false));
+		currentQuestionPanel.add(Box.createHorizontalGlue(), ChainGBC.getInstance(6, 4).setFill(true, false));
 		
-		currentQuestionPanel.add(correctButton, ChainGBC.getInstance(6, 4).setFill(false, false));
-		currentQuestionPanel.add(incorrectButton, ChainGBC.getInstance(7, 4).setFill(false, false));
+		currentQuestionPanel.add(correctButton, ChainGBC.getInstance(7, 4).setFill(false, false));
+		currentQuestionPanel.add(incorrectButton, ChainGBC.getInstance(8, 4).setFill(false, false));
 		
 		
 		return currentQuestionPanel;

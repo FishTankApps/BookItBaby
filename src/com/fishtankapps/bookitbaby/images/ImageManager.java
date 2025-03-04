@@ -32,6 +32,13 @@ public class ImageManager {
 	public static BufferedImage DREW_OR_FALSE_TEXT = null;
 	public static BufferedImage DREW_OR_FALSE_YELLOW_TRIANGLE = null;
 	
+	public static BufferedImage GO_FIGURE_BLUE_SQUARE = null;
+	public static BufferedImage GO_FIGURE_RED_OVAL = null;
+	public static BufferedImage GO_FIGURE_TEXT = null;
+	public static BufferedImage GO_FIGURE_YELLOW_TRIANGLE = null;
+	public static BufferedImage GO_FIGURE_STICK_FIGURE = null;
+	public static BufferedImage GO_FIGURE_FOURIER_PLOT = null;
+	
 	public static BufferedImage PATCHING_BLUE_SQUARE = null;
 	public static BufferedImage PATCHING_BIG_PATCH = null;
 	public static BufferedImage PATCHING_LITTLE_PATCH = null;

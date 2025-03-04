@@ -6,6 +6,7 @@ import com.fishtankapps.bookitbaby.game.Question;
 import com.fishtankapps.bookitbaby.game.Question.QuestionType;
 import com.fishtankapps.bookitbaby.questions.ChristInContextQuestion;
 import com.fishtankapps.bookitbaby.questions.DrewOrFalse;
+import com.fishtankapps.bookitbaby.questions.GoFigure;
 import com.fishtankapps.bookitbaby.questions.MultiplingChoice;
 import com.fishtankapps.bookitbaby.questions.Patching;
 import com.fishtankapps.bookitbaby.questions.PhilInTheBlank;
@@ -104,6 +105,11 @@ public class QuestionProperties {
 			prompt = q.getPrompt();
 			answer = q.getSongName();
 			songFile = q.getSongFileName();
+			
+		} else if (question instanceof GoFigure) {
+			type = QuestionType.GO_FIGURE;
+			GoFigure q = (GoFigure) question;
+			prompt = q.getPrompt();
 			
 		} else if (question instanceof QuestionDraft) {
 			QuestionDraft q = (QuestionDraft) question;
@@ -237,8 +243,7 @@ public class QuestionProperties {
 				return new QuestionDraft(this);
 			else
 				return null;
-		}
-			
+		}			
 		
 		Question q = null;
 		
@@ -252,6 +257,8 @@ public class QuestionProperties {
 			q = new PhilInTheBlank(prompt, answer, letterIndex);
 		else if (type == QuestionType.SONG_ANSWER)
 			q = new SongAnswer(prompt, answer, songFile);
+		else if (type == QuestionType.GO_FIGURE)
+			q = new GoFigure(prompt);
 		
 		if(isChristInContext)
 			q = new ChristInContextQuestion(q);
@@ -275,6 +282,8 @@ public class QuestionProperties {
 			return canGeneratePhilInTheBlank();
 		else if (type == QuestionType.SONG_ANSWER)
 			return canGenerateSongAnswer();
+		else if (type == QuestionType.GO_FIGURE)
+			return canGenerateGoFigure();
 		else
 			return false;		
 	}
@@ -292,6 +301,9 @@ public class QuestionProperties {
 	}
 	public boolean canGenerateSongAnswer() {
 		return !prompt.trim().equals("") && !answer.trim().equals("") && songFile != null && !songFile.trim().equals("");
+	}
+	public boolean canGenerateGoFigure() {
+		return !prompt.trim().equals("");
 	}
 	
 	public QuestionPropertiesButton getQuestionPropertiesButton() {

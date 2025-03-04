@@ -70,8 +70,7 @@ public class PhilInTheBlank extends Question {
 		panel.setBackground(Constants.TRANSPARENT);
 		
 		OutlinedLabel promptLabel = new OutlinedLabel(question,  new Font("Bahnschrift", Font.PLAIN, Constants.PROMPT_FONT_SIZE - 10), Constants.PROMPT_FONT_SIZE/4);
-		display = new PhilInTheBlankDisplay(answer, letterIndex);
-		
+		display = new PhilInTheBlankDisplay(answer, letterIndex);		
 		
 		panel.add(promptLabel, ChainGBC.getInstance(0, 0).setFill(true, false).setPadding(10));
 		panel.add(display,     ChainGBC.getInstance(0, 1).setFill(true, true).setPadding(10));

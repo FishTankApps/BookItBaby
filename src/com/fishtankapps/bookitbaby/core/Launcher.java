@@ -13,7 +13,8 @@ import com.fishtankapps.bookitbaby.util.FontLoader;
 public class Launcher {
 
 	public static void main(String[] args) {
-		launch(args);
+//		launch(args);
+		launch(new String[] {"C:\\Users\\Whitaker\\Documents\\Christian\\BookItBaby!\\Go Figure Test.bbgz"});
 	}
 	
 	private static void launch(String[] args) {
